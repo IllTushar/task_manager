@@ -117,12 +117,10 @@ public class TaskFunctions {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private static void insertDataInsideTable(RequestClass requestModel, String uuid, String title, String description, String dueDate, String location, String priority, String status) {
+    public static void insertDataInsideTable(RequestClass requestModel, String uuid, String title, String description, String dueDate, String location, String priority, String status) {
 
         ResponseModel responseModel = new ResponseModel(uuid,title,description,dueDate,location,priority,status);
         requestModel.roomInterface().insertTheEntity(responseModel);
-//        adapterClass.notifyItemInserted(adapterClass.getItemCount());
-//        adapterClass.notifyDataSetChanged();
     }
 
 

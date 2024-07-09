@@ -62,7 +62,7 @@ public class Home extends Fragment {
 
         // Get task from Database..
         ArrayList<ResponseModel> list = (ArrayList<ResponseModel>) requestClass.roomInterface().getAllData();
-        if (list != null) {
+        if (list != null && !list.isEmpty()) {
             getDataFromRoom(list);
         } else {
             getDataFromFirebase();

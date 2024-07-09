@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.test.EditTask.EditTaskScreen;
 import com.example.test.Fragments.Home.Model.Task;
 import com.example.test.R;
+import com.example.test.RoomDB.RequestClass;
 import com.example.test.RoomDB.ResponseModel;
+import com.example.test.Task.TaskFunctions;
 import com.example.test.assets.Assets;
 
 
@@ -29,10 +31,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
     Assets assets;
     private List<ResponseModel> list;
     private List<ResponseModel> list1;
+    RequestClass requestClass;
 
     public TaskAdapter(Context context, List<Task> taskList) {
         this.taskList = taskList;
         this.context = context;
+        requestClass = RequestClass.getRequestClass(context);
     }
 
     public TaskAdapter(Context context, List<ResponseModel> list, List<ResponseModel> list1) {
@@ -91,6 +95,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
                 }
             });
         } else {
+            TaskFunctions.insertDataInsideTable(requestClass, taskList.get(position).getUuid(), taskList.get(position).getTitle(), taskList.get(position).getDescription(), taskList.get(position).getDueDate(), taskList.get(position).getLocation(), taskList.get(position).getPriority(), taskList.get(position).getStatus());
             holder.title.setText(taskList.get(position).getTitle());
             holder.description.setText(taskList.get(position).getDescription());
             holder.due_date.setText(taskList.get(position).getDueDate());
