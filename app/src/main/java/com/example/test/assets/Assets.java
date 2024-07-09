@@ -1,5 +1,6 @@
 package com.example.test.assets;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -8,9 +9,10 @@ import android.widget.Toast;
 public class Assets {
 
     Context context;
-
+     ProgressDialog pd;
     public Assets(Context context) {
         this.context = context;
+        pd = new ProgressDialog(context);
     }
 
     public void toast(Context context, String message) {
@@ -30,5 +32,12 @@ public class Assets {
     }
     public void intent(Class<?> targetClass) {
         context.startActivity(new Intent(context, targetClass));
+    }
+    public void showProgressDialog(String message){
+        pd.show();
+        pd.setMessage(message);
+    }
+    public void dismissDialog(){
+        pd.dismiss();
     }
 }

@@ -30,7 +30,7 @@ public class bottom_nav_bar {
                     case R.id.nav_home:
                         selected_fragment = new Home();
                         break;
-                    case nav_dashboard:
+                    case R.id.nav_dashboard:
                         selected_fragment = new Dashboard();
                         break;
                     case R.id.nav_setting:

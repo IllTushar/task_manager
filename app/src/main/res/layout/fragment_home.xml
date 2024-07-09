@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.Home.Home">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -21,39 +21,47 @@
             app:layout_constraintTop_toTopOf="parent"
             app:titleTextColor="@color/white" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/appCompatEditText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/search_box"
-            android:drawableLeft="@drawable/baseline_search_24"
-            android:hint="Search"
-            android:padding="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/create_new_task"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintVertical_bias="0.025"
+            tools:layout_editor_absoluteX="16dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/task_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatEditText"
-            tools:layout_editor_absoluteX="-9dp" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/appCompatEditText"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/search_box"
+                android:drawableLeft="@drawable/baseline_search_24"
+                android:hint="Search"
+                android:padding="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/task_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/create_new_task"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="15dp"
             android:elevation="5dp"
-            android:src="@drawable/baseline_add_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:src="@drawable/baseline_add_24" />
+    </RelativeLayout>
 
 </FrameLayout>

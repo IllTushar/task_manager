@@ -4,4 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="toolbar">#9C27B0</color>
     <color name="grey">#808080</color>
+    <color name="red">#FF0000</color>
+    <color name="light_red">#E2B2B2</color>
+    <color name="light_yellow">#FFFFED</color>
+    <color name="light_purple">#CBC3E3</color>
 </resources>

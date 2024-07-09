@@ -8,7 +8,7 @@ public class firebase_model {
     public String location;
     public String fcmKeys;
 
-    public firebase_model(String title, String description, String priority, String dueDate, String location) {
+    public firebase_model(String title, String description, String dueDate, String location, String priority) {
         this.title = title;
         this.description = description;
         this.priority = priority;
