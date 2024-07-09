@@ -6,9 +6,11 @@ import android.os.Bundle;
 import java.util.*;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -36,6 +38,7 @@ public class Home extends Fragment {
     private TaskAdapter taskAdapter;
     private List<Task> taskList;
     Assets assets;
+    AlertDialog alertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,12 +56,86 @@ public class Home extends Fragment {
 
         // Set the Toolbar as the ActionBar
         actionBar();
+
+        // Get task from firebase..
         getDataFromFirebase();
+
+        //Create new task
         createNewTask(createTask);
+
+        // Swipe the list to delete the task..
+        addSwipeToDelete();
         return view;
     }
 
-    private void getDataFromFirebase() {
+
+    private void addSwipeToDelete() {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false; // We don't want drag & drop
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                if (taskAdapter == null) {
+                    assets.toast("TaskAdapter is not initialized");
+                    return;
+                }
+
+                Task task = taskList.get(position);
+
+                // Show confirmation dialog
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Delete Task")
+                        .setMessage("Are you sure you want to delete this task?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            deleteTaskFromFirebase(task);
+                        })
+                        .setNegativeButton("No", (dialog, which) -> {
+                            taskAdapter.notifyItemChanged(position);
+                        })
+                        .setOnCancelListener(dialog -> taskAdapter.notifyItemChanged(position))
+                        .show();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(taskListRecyclerView);
+    }
+
+
+    private void actionBar() {
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        if (activity != null) {
+            activity.setSupportActionBar(toolbar);
+        }
+
+        toolbar_class.toolbar(getContext(), toolbar, "Task Manager");
+    }
+
+    private void createNewTask(FloatingActionButton createTask) {
+        Assets assets = new Assets(getContext());
+        createTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                assets.intent(getContext(), task_activity.class);
+            }
+        });
+    }
+
+    public void findID(View view) {
+        toolbar = view.findViewById(R.id.toolbar);
+        createTask = view.findViewById(R.id.create_new_task);
+        taskListRecyclerView = view.findViewById(R.id.task_list);
+        assets = new Assets(getContext());
+
+    }
+
+
+    public void getDataFromFirebase() {
         assets.showProgressDialog("Please wait!!");
         taskList = new ArrayList<>();
         taskAdapter = new TaskAdapter(getContext(), taskList);
@@ -90,32 +167,18 @@ public class Home extends Fragment {
         });
     }
 
-    private void actionBar() {
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+    public void deleteTaskFromFirebase(Task task) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference taskRef = database.getReference("Task").child(task.getUuid());
+        taskRef.removeValue().addOnCompleteListener(taskCompletion -> {
+            if (taskCompletion.isSuccessful()) {
+                taskList.remove(task);
+                taskAdapter.notifyDataSetChanged();
 
-        if (activity != null) {
-            activity.setSupportActionBar(toolbar);
-        }
-
-        toolbar_class.toolbar(getContext(), toolbar, "Task Manager");
-    }
-
-    private void createNewTask(FloatingActionButton createTask) {
-        Assets assets = new Assets(getContext());
-        createTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                assets.intent(getContext(), task_activity.class);
+                assets.toast("Task removed successfully");
+            } else {
+                assets.toast("Failed to remove task");
             }
         });
     }
-
-    public void findID(View view) {
-        toolbar = view.findViewById(R.id.toolbar);
-        createTask = view.findViewById(R.id.create_new_task);
-        taskListRecyclerView = view.findViewById(R.id.task_list);
-        assets = new Assets(getContext());
-
-    }
-
 }

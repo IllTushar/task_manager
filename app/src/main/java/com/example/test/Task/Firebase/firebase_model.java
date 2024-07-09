@@ -7,8 +7,10 @@ public class firebase_model {
     public String dueDate;
     public String location;
     public String fcmKeys;
+    public String uuid;
 
-    public firebase_model(String title, String description, String dueDate, String location, String priority) {
+    public firebase_model(String uuid, String title, String description, String dueDate, String location, String priority) {
+        this.uuid = uuid;
         this.title = title;
         this.description = description;
         this.priority = priority;

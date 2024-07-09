@@ -6,7 +6,7 @@ public class Task {
     private String location;
     private String priority;
     private String title;
-
+    private String uuid;
     // Constructors, getters, and setters
 
     public Task() {
@@ -19,6 +19,14 @@ public class Task {
         this.location = location;
         this.priority = priority;
         this.title = title;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getDescription() {
