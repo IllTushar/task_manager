@@ -1,5 +1,6 @@
 package com.example.test.Task;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.icu.util.Calendar;
@@ -13,6 +14,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 
 import com.example.test.R;
+import com.example.test.RoomDB.RequestClass;
+import com.example.test.RoomDB.ResponseModel;
 import com.example.test.Task.Firebase.firebase_database;
 import com.example.test.assets.Assets;
 import com.example.test.main_screen.MainActivity;
@@ -91,7 +94,7 @@ public class TaskFunctions {
     }
 
     //Save Task
-    public static void saveTask(Context context, AppCompatButton save_task, AppCompatEditText title, AppCompatEditText description, TextView dueDate, TextView location, Spinner priority_level) {
+    public static void saveTask(Context context, AppCompatButton save_task, AppCompatEditText title, AppCompatEditText description, TextView dueDate, TextView location, Spinner priority_level, RequestClass requestClass) {
         Assets assets = new Assets(context);
         save_task.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,12 +108,23 @@ public class TaskFunctions {
                     String Priority = priority_level.getSelectedItem().toString().trim();
                     String Status = "Pending";
                     if (!uuid.isEmpty() && uuid != null) {
-                        firebase_database.firebase_function(assets, uuid, Title, Description, DueDate, Location, Priority,Status);
+                        firebase_database.firebase_function(assets, uuid, Title, Description, DueDate, Location, Priority, Status);
+                        insertDataInsideTable(requestClass, uuid, Title, Description, DueDate, Location, Priority, Status);
                     }
                 }
             }
         });
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private static void insertDataInsideTable(RequestClass requestModel, String uuid, String title, String description, String dueDate, String location, String priority, String status) {
+
+        ResponseModel responseModel = new ResponseModel(uuid,title,description,dueDate,location,priority,status);
+        requestModel.roomInterface().insertTheEntity(responseModel);
+//        adapterClass.notifyItemInserted(adapterClass.getItemCount());
+//        adapterClass.notifyDataSetChanged();
+    }
+
 
     //Validation of the task..
     private static boolean validation(Context context, AppCompatEditText title, AppCompatEditText description, TextView dueDate, TextView location, Spinner priority_level) {

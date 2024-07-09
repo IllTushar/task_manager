@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.test.R;
+import com.example.test.RoomDB.RequestClass;
 import com.example.test.assets.Assets;
 
 
@@ -33,7 +34,7 @@ public class task_activity extends AppCompatActivity {
     Location_Manager locationManager;
     AppCompatButton save_task;
     AppCompatEditText title, description;
-
+    RequestClass requestClass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +42,7 @@ public class task_activity extends AppCompatActivity {
         find_Id();
         TaskFunctions.functions(task_activity.this, btn_back, dueDate, priority_level);
         getLocationPermission();
-        TaskFunctions.saveTask(task_activity.this,save_task,title,description,dueDate,location,priority_level);
+        TaskFunctions.saveTask(task_activity.this,save_task,title,description,dueDate,location,priority_level,requestClass);
 
     }
 
@@ -79,5 +80,6 @@ public class task_activity extends AppCompatActivity {
         save_task = findViewById(R.id.save_task);
         title = findViewById(R.id.title);
         description = findViewById(R.id.description);
+        requestClass = RequestClass.getRequestClass(task_activity.this);
     }
 }

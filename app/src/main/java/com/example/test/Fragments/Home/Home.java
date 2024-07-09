@@ -21,6 +21,8 @@ import com.example.test.Fragments.Home.Adapter.TaskAdapter;
 import com.example.test.Fragments.Home.Model.Task;
 
 import com.example.test.R;
+import com.example.test.RoomDB.RequestClass;
+import com.example.test.RoomDB.ResponseModel;
 import com.example.test.Task.task_activity;
 import com.example.test.assets.Assets;
 import com.example.test.assets.toolbar_class;
@@ -39,6 +41,7 @@ public class Home extends Fragment {
     private List<Task> taskList;
     Assets assets;
     AlertDialog alertDialog;
+    RequestClass requestClass;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +60,13 @@ public class Home extends Fragment {
         // Set the Toolbar as the ActionBar
         actionBar();
 
-        // Get task from firebase..
-        getDataFromFirebase();
+        // Get task from Database..
+        ArrayList<ResponseModel> list = (ArrayList<ResponseModel>) requestClass.roomInterface().getAllData();
+        if (list != null) {
+            getDataFromRoom(list);
+        } else {
+            getDataFromFirebase();
+        }
 
         //Create new task
         createNewTask(createTask);
@@ -66,6 +74,11 @@ public class Home extends Fragment {
         // Swipe the list to delete the task..
         addSwipeToDelete();
         return view;
+    }
+
+    private void getDataFromRoom(ArrayList<ResponseModel> list) {
+        taskAdapter = new TaskAdapter(getContext(), list, list);
+        taskListRecyclerView.setAdapter(taskAdapter);
     }
 
 
@@ -131,6 +144,7 @@ public class Home extends Fragment {
         createTask = view.findViewById(R.id.create_new_task);
         taskListRecyclerView = view.findViewById(R.id.task_list);
         assets = new Assets(getContext());
+        requestClass = RequestClass.getRequestClass(getContext());
 
     }
 

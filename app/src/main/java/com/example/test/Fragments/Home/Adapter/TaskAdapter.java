@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.test.EditTask.EditTaskScreen;
 import com.example.test.Fragments.Home.Model.Task;
 import com.example.test.R;
+import com.example.test.RoomDB.ResponseModel;
 import com.example.test.assets.Assets;
 
 
@@ -26,10 +27,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
     private List<Task> taskList;
     Context context;
     Assets assets;
+    private List<ResponseModel> list;
+    private List<ResponseModel> list1;
 
     public TaskAdapter(Context context, List<Task> taskList) {
         this.taskList = taskList;
         this.context = context;
+    }
+
+    public TaskAdapter(Context context, List<ResponseModel> list, List<ResponseModel> list1) {
+        this.list = list;
+        this.context = context;
+        this.list1 = list1;
     }
 
     @NonNull
@@ -42,48 +51,92 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
-        holder.title.setText(taskList.get(position).getTitle());
-        holder.description.setText(taskList.get(position).getDescription());
-        holder.due_date.setText(taskList.get(position).getDueDate());
-        String priority = taskList.get(position).getPriority();
-        holder.priority.setText(taskList.get(position).getPriority());
-        holder.status.setText(taskList.get(position).getStatus());
-        if (priority.equals("High")) {
-            // Setting background color
-            holder.priority.setBackgroundResource(R.color.light_red); // Assuming you have defined this color resource
-            // Setting text color
-            holder.priority.setTextColor(Color.RED);
-        } else if (priority.equals("Medium")) {
-            // Setting background color
-            holder.priority.setBackgroundResource(R.color.light_yellow); // Assuming you have defined this color resource
-            // Setting text color
-            holder.priority.setTextColor(Color.YELLOW);
-        } else if (priority.equals("Low")) {
-            // Setting background color
-            holder.priority.setBackgroundResource(R.color.light_purple); // Assuming you have defined this color resource
-            // Setting text color
-            holder.priority.setTextColor(ContextCompat.getColor(context, R.color.toolbar));
-        }
-        holder.location.setText(taskList.get(position).getLocation());
-
-        holder.task_card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(context, EditTaskScreen.class);
-                i.putExtra("uuid", taskList.get(position).getUuid());
-                i.putExtra("title", holder.title.getText().toString().trim());
-                i.putExtra("description", holder.description.getText().toString().trim());
-                i.putExtra("due_date", holder.due_date.getText().toString().trim());
-                i.putExtra("location", holder.location.getText().toString().trim());
-                i.putExtra("priority_level", holder.priority.getText().toString().trim());
-                i.putExtra("status", holder.status.getText().toString().trim());
-                context.startActivity(i);
+        if (list != null) {
+            holder.title.setText(list.get(position).getTitle());
+            holder.description.setText(list.get(position).getDescription());
+            holder.due_date.setText(list.get(position).getDueDate());
+            String priority = list.get(position).getPriority();
+            holder.priority.setText(list.get(position).getPriority());
+            holder.status.setText(list.get(position).getStatus());
+            if (priority.equals("High")) {
+                // Setting background color
+                holder.priority.setBackgroundResource(R.color.light_red); // Assuming you have defined this color resource
+                // Setting text color
+                holder.priority.setTextColor(Color.RED);
+            } else if (priority.equals("Medium")) {
+                // Setting background color
+                holder.priority.setBackgroundResource(R.color.light_yellow); // Assuming you have defined this color resource
+                // Setting text color
+                holder.priority.setTextColor(Color.YELLOW);
+            } else if (priority.equals("Low")) {
+                // Setting background color
+                holder.priority.setBackgroundResource(R.color.light_purple); // Assuming you have defined this color resource
+                // Setting text color
+                holder.priority.setTextColor(ContextCompat.getColor(context, R.color.toolbar));
             }
-        });
+            holder.location.setText(list.get(position).getLocation());
+
+            holder.task_card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(context, EditTaskScreen.class);
+                    i.putExtra("uuid", list.get(position).getUuid());
+                    i.putExtra("title", holder.title.getText().toString().trim());
+                    i.putExtra("description", holder.description.getText().toString().trim());
+                    i.putExtra("due_date", holder.due_date.getText().toString().trim());
+                    i.putExtra("location", holder.location.getText().toString().trim());
+                    i.putExtra("priority_level", holder.priority.getText().toString().trim());
+                    i.putExtra("status", holder.status.getText().toString().trim());
+                    context.startActivity(i);
+                }
+            });
+        } else {
+            holder.title.setText(taskList.get(position).getTitle());
+            holder.description.setText(taskList.get(position).getDescription());
+            holder.due_date.setText(taskList.get(position).getDueDate());
+            String priority = taskList.get(position).getPriority();
+            holder.priority.setText(taskList.get(position).getPriority());
+            holder.status.setText(taskList.get(position).getStatus());
+            if (priority.equals("High")) {
+                // Setting background color
+                holder.priority.setBackgroundResource(R.color.light_red); // Assuming you have defined this color resource
+                // Setting text color
+                holder.priority.setTextColor(Color.RED);
+            } else if (priority.equals("Medium")) {
+                // Setting background color
+                holder.priority.setBackgroundResource(R.color.light_yellow); // Assuming you have defined this color resource
+                // Setting text color
+                holder.priority.setTextColor(Color.YELLOW);
+            } else if (priority.equals("Low")) {
+                // Setting background color
+                holder.priority.setBackgroundResource(R.color.light_purple); // Assuming you have defined this color resource
+                // Setting text color
+                holder.priority.setTextColor(ContextCompat.getColor(context, R.color.toolbar));
+            }
+            holder.location.setText(taskList.get(position).getLocation());
+
+            holder.task_card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(context, EditTaskScreen.class);
+                    i.putExtra("uuid", taskList.get(position).getUuid());
+                    i.putExtra("title", holder.title.getText().toString().trim());
+                    i.putExtra("description", holder.description.getText().toString().trim());
+                    i.putExtra("due_date", holder.due_date.getText().toString().trim());
+                    i.putExtra("location", holder.location.getText().toString().trim());
+                    i.putExtra("priority_level", holder.priority.getText().toString().trim());
+                    i.putExtra("status", holder.status.getText().toString().trim());
+                    context.startActivity(i);
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
+        if (list != null) {
+            return list.size();
+        }
         return taskList.size();
     }
 
