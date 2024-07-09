@@ -8,6 +8,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.test.EditTask.functions.EditTaskClass;
 import com.example.test.R;
@@ -19,6 +20,7 @@ public class EditTaskScreen extends AppCompatActivity {
     ImageView btn_back;
     Assets assets;
     Spinner status_spinner, priority_level;
+    AppCompatButton save;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,15 @@ public class EditTaskScreen extends AppCompatActivity {
                 assets.intent(MainActivity.class);
             }
         });
+        String uuid = getIntent().getStringExtra("uuid");
+        if (uuid != null) {
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EditTaskClass.update_data(assets,uuid,title, description, due_date, location, status_spinner, priority_level);
+                }
+            });
+        }
 
 
     }
@@ -47,5 +58,6 @@ public class EditTaskScreen extends AppCompatActivity {
         assets = new Assets(EditTaskScreen.this);
         status_spinner = findViewById(R.id.edit_completiton_status);
         priority_level = findViewById(R.id.edit_priority_level);
+        save = findViewById(R.id.edit_save_task);
     }
 }
