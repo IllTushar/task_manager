@@ -103,8 +103,9 @@ public class TaskFunctions {
                     String DueDate = dueDate.getText().toString().trim();
                     String Location = location.getText().toString().trim();
                     String Priority = priority_level.getSelectedItem().toString().trim();
+                    String Status = "Pending";
                     if (!uuid.isEmpty() && uuid != null) {
-                        firebase_database.firebase_function(assets, uuid, Title, Description, DueDate, Location, Priority);
+                        firebase_database.firebase_function(assets, uuid, Title, Description, DueDate, Location, Priority,Status);
                     }
                 }
             }

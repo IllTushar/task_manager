@@ -47,6 +47,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
         holder.due_date.setText(taskList.get(position).getDueDate());
         String priority = taskList.get(position).getPriority();
         holder.priority.setText(taskList.get(position).getPriority());
+        holder.status.setText(taskList.get(position).getStatus());
         if (priority.equals("High")) {
             // Setting background color
             holder.priority.setBackgroundResource(R.color.light_red); // Assuming you have defined this color resource
@@ -75,6 +76,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
                 i.putExtra("due_date", holder.due_date.getText().toString().trim());
                 i.putExtra("location", holder.location.getText().toString().trim());
                 i.putExtra("priority_level", holder.priority.getText().toString().trim());
+                i.putExtra("status", holder.status.getText().toString().trim());
                 context.startActivity(i);
             }
         });
@@ -86,7 +88,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
     }
 
     public class myViewHolder extends RecyclerView.ViewHolder {
-        TextView title, description, due_date, priority, location;
+        TextView title, description, due_date, priority, location, status;
         CardView task_card;
 
         public myViewHolder(@NonNull View itemView) {
@@ -98,6 +100,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
             location = itemView.findViewById(R.id.rec_location);
             task_card = itemView.findViewById(R.id.task_card);
             assets = new Assets(context);
+            status = itemView.findViewById(R.id.rec_status);
         }
     }
 }
