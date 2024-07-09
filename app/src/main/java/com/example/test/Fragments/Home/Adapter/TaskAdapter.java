@@ -2,6 +2,7 @@ package com.example.test.Fragments.Home.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.test.EditTask.EditTaskScreen;
 import com.example.test.Fragments.Home.Model.Task;
 import com.example.test.R;
+import com.example.test.assets.Assets;
 
 
 import java.util.*;
@@ -21,7 +25,9 @@ import java.util.*;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> {
     private List<Task> taskList;
     Context context;
-    public TaskAdapter(Context context,List<Task> taskList) {
+    Assets assets;
+
+    public TaskAdapter(Context context, List<Task> taskList) {
         this.taskList = taskList;
         this.context = context;
     }
@@ -58,6 +64,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
             holder.priority.setTextColor(ContextCompat.getColor(context, R.color.toolbar));
         }
         holder.location.setText(taskList.get(position).getLocation());
+
+        holder.task_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, EditTaskScreen.class);
+                i.putExtra("uuid", taskList.get(position).getUuid());
+                i.putExtra("title", holder.title.getText().toString().trim());
+                i.putExtra("description", holder.description.getText().toString().trim());
+                i.putExtra("due_date", holder.due_date.getText().toString().trim());
+                i.putExtra("location", holder.location.getText().toString().trim());
+                i.putExtra("priority_level", holder.priority.getText().toString().trim());
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -67,6 +87,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         TextView title, description, due_date, priority, location;
+        CardView task_card;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,6 +96,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.myViewHolder> 
             due_date = itemView.findViewById(R.id.rec_date);
             priority = itemView.findViewById(R.id.rec_priority);
             location = itemView.findViewById(R.id.rec_location);
+            task_card = itemView.findViewById(R.id.task_card);
+            assets = new Assets(context);
         }
     }
 }
