@@ -1,103 +1,83 @@
 package com.example.test.Task;
 
-import android.app.DatePickerDialog;
-import android.icu.util.Calendar;
+import android.content.pm.PackageManager;
+
+
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.test.R;
 import com.example.test.assets.Assets;
-import com.example.test.main_screen.MainActivity;
+
+
+import android.Manifest;
+import android.widget.Toast;
+
 
 public class task_activity extends AppCompatActivity {
+
     ImageView btn_back;
     Spinner priority_level;
-    TextView dueDate;
+    TextView dueDate, location;
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
+    Assets assets;
+    Location_Manager locationManager;
+    AppCompatButton save_task;
+    AppCompatEditText title, description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
         find_Id();
-        functions();
+        TaskFunctions.functions(task_activity.this, btn_back, dueDate, priority_level);
+        getLocationPermission();
+        TaskFunctions.saveTask(task_activity.this,save_task,title,description,dueDate,location,priority_level);
+
     }
 
-    private void functions() {
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Assets assets = new Assets(task_activity.this);
-                assets.intent(task_activity.this, MainActivity.class);
+    private void getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        } else {
+            locationManager.getLocation(location);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationManager.getLocation(location);
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
             }
-        });
-        drop_down();
-        due_date();
+        }
     }
 
-    private void due_date() {
-        dueDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerFunction(dueDate);
-            }
-        });
-    }
-
-    private void datePickerFunction(TextView dueDate) {
-        // Get current date
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-        // Create a DatePickerDialog
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                (view, year1, monthOfYear, dayOfMonth1) -> {
-                    // Handle date selection
-                    String selectedDate = formatDate(dayOfMonth1, monthOfYear, year1);
-                    dueDate.setText(selectedDate);
-                },
-                year, month, dayOfMonth);
-
-        // Restrict DatePicker to only future dates
-        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-
-        // Show DatePickerDialog
-        datePickerDialog.show();
-    }
-
-    private String formatDate(int dayOfMonth, int monthOfYear, int year) {
-        // Format month to characters
-        String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-        String month = months[monthOfYear];
-
-        // Format date string
-        return dayOfMonth + "-" + month + "-" + year;
-    }
 
     private void find_Id() {
         btn_back = findViewById(R.id.btn_back);
         priority_level = findViewById(R.id.priority_level);
         dueDate = findViewById(R.id.due_date);
-    }
-
-
-    // priority drop down..
-    private void drop_down() {
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.priority, android.R.layout.simple_spinner_item);
-
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        priority_level.setAdapter(adapter);
+        assets = new Assets(task_activity.this);
+        location = findViewById(R.id.location);
+        locationManager = new Location_Manager(task_activity.this);
+        save_task = findViewById(R.id.save_task);
+        title = findViewById(R.id.title);
+        description = findViewById(R.id.description);
     }
 }

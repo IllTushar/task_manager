@@ -17,6 +17,10 @@ public class Assets {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
+    public void toast(String message) {
+        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show();
+    }
+
     public void log(String tag, String message) {
         Log.d(tag, message);
     }
@@ -24,5 +28,7 @@ public class Assets {
     public void intent(Context context, Class<?> targetClass) {
         context.startActivity(new Intent(context, targetClass));
     }
-
+    public void intent(Class<?> targetClass) {
+        context.startActivity(new Intent(context, targetClass));
+    }
 }
